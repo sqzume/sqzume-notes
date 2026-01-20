@@ -1,13 +1,30 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("posts");
+const recentPosts = allPosts
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 5);
 ---
 
 <BaseLayout>
     <h2>Welcome</h2>
-    <p>sqzume notes へようこそ。</p>
     <p>ここでは日々のメモや週報を書いていきます。</p>
 
     <section>
         <h3>Recent Posts</h3>
+        <ul>
+            {
+                recentPosts.map((post) => (
+                    <li>
+                        <a href="{`/posts/${post.slug}/`">
+                            {post.data.date.toLocaleDateString()} -{" "}
+                            {post.data.title}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
     </section>
 </BaseLayout>

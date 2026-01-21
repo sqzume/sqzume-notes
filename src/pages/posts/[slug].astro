@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// URL 作成
+export async function getStaticPaths() {
+    const blogEntries = await getCollection("posts");
+    return blogEntries.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+// 記事データ取得
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout>
+    <h2>{entry.data.title}</h2>
+    <p>投稿日: {entry.data.date.toLocaleDateString()}</p>
+</BaseLayout>
